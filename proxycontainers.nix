@@ -67,8 +67,16 @@ in {
       }) withIps) // {
         default = {
           # default page
-          documentRoot = "${(pkgs.writeTextDir "home/index.html" ''
-            This page is a TODO.
+          documentRoot = let
+            names = attrNames withIps;
+            listItems = map (name: "<li><a href=\"//${name}\">${name}</a></li>\n") names;
+            str = builtins.concatStringsSep "" listItems;
+          in "${(pkgs.writeTextDir "home/index.html" ''
+            <h1>This route is not configured.</h1>
+            <h2>Configured routes:</h2>
+            <ul>
+              ${str}
+            </ul>
           '')}/home/";
           onlySSL = true;
           sslServerCert = ./cert.pem;
