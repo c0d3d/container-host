@@ -1,11 +1,9 @@
 let
   containers = {
-    backend1 = {
-      ip = "192.168.100.11";
+    valgrindm = {
       config = import ./valgrindmanual.nix;
     };
-    backend2 = {
-      ip = "192.168.100.12";
+    nixm = {
       config = import ./nixmanual.nix;
     };
   };

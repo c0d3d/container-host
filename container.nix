@@ -2,6 +2,21 @@
 with lib;
 let
   cfg = config.proxycontainers;
+  startIp = 11;
+  makeIp = num: "192.168.100.${toString num}";
+  addIps = (set:
+    let
+      names = builtins.attrNames set;
+      folded = lib.lists.foldr (cur: acc:
+        let
+          val = builtins.getAttr cur set;
+          newVal = val // { ip = makeIp acc.idx; };
+          newItems = acc.items // { "${cur}" = newVal; };
+          newIdx = acc.idx + 1;
+        in { items = newItems; idx = newIdx; }
+        ) { idx = startIp; items = {}; } names;
+    in folded.items
+  );
 in {
   options = {
     proxycontainers = {
@@ -24,14 +39,17 @@ in {
       };
     };
   };
-  config = mkIf (cfg.enable) {
+  config = mkIf (cfg.enable)
+  (let
+    withIps = addIps cfg.containers;
+  in {
     containers = mapAttrs (name: value: {
       config = value.config; # TODO inherit config (value);
       autoStart = true;
       privateNetwork = true;
       hostAddress = "192.168.100.10";
-      localAddress = value.ip;
-    }) cfg.containers;
+      localAddress = "${value.ip}";
+    }) withIps;
     services.httpd = {
       enable = true;
       adminAddr = "kyle.sferrazza@gmail.com";
@@ -41,10 +59,10 @@ in {
           ProxyPass "/" "http://${value.ip}/"
           ProxyPassReverse "/" "http://${value.ip}/"
         '';
-      }) cfg.containers;
+      }) withIps;
       # TODO fallback page
       # virtualHosts.default = {
       # };
     };
-  };
+  });
 }
