@@ -10,7 +10,7 @@ let
 
 in {
   vm = { pkgs, ... }: {
-    imports = [ ./container.nix ];
+    imports = [ ./proxycontainers.nix ];
     deployment.targetEnv = "virtualbox";
     proxycontainers = {
       enable = true;
