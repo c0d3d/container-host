@@ -4,12 +4,8 @@
     ./proxycontainers.nix
   ];
 
-  services.openssh = {
-    enable = true;
-  };
-
+  services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keyFiles = [ ~/.ssh/id_rsa.pub ];
-  users.users.kyle.openssh.authorizedKeys.keyFiles = [ ~/.ssh/id_rsa.pub ];
 
   proxycontainers = {
     enable = true;

@@ -1,2 +1,5 @@
 .terraform
 *.tfstate*
+cert.pem
+privkey.pem
+fullchain.pem

@@ -60,12 +60,20 @@ in {
           ProxyPass "/" "http://${value.ip}/"
           ProxyPassReverse "/" "http://${value.ip}/"
         '';
+        onlySSL = true;
+        sslServerCert = ./cert.pem;
+        #sslServerChain = ./fullchain.pem;
+        sslServerKey = ./privkey.pem;
       }) withIps) // {
         default = {
           # default page
           documentRoot = "${(pkgs.writeTextDir "home/index.html" ''
             This page is a TODO.
           '')}/home/";
+          onlySSL = true;
+          sslServerCert = ./cert.pem;
+          #sslServerChain = ./fullchain.pem;
+          sslServerKey = ./privkey.pem;
         };
       };
     };
