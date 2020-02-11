@@ -31,6 +31,10 @@ in {
             ip = mkOption {
               type = types.str;
             };
+            port = mkOption {
+              type = types.str;
+              default = "80";
+            };
             config = mkOption {
               default = {};
             };
@@ -57,8 +61,8 @@ in {
       virtualHosts = (mapAttrs (name: value: {
         hostName = name;
         extraConfig = ''
-          ProxyPass "/" "http://${value.ip}/"
-          ProxyPassReverse "/" "http://${value.ip}/"
+          ProxyPass "/" "http://${value.ip}:${value.port}/"
+          ProxyPassReverse "/" "http://${value.ip}:${value.port}/"
         '';
         onlySSL = true;
         sslServerCert = ./cert.pem;
