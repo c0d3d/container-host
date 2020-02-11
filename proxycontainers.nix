@@ -53,16 +53,20 @@ in {
     services.httpd = {
       enable = true;
       adminAddr = "kyle.sferrazza@gmail.com";
-      virtualHosts = mapAttrs (name: value: {
+      virtualHosts = (mapAttrs (name: value: {
         hostName = name;
         extraConfig = ''
           ProxyPass "/" "http://${value.ip}/"
           ProxyPassReverse "/" "http://${value.ip}/"
         '';
-      }) withIps;
-      # TODO fallback page
-      # virtualHosts.default = {
-      # };
+      }) withIps) // {
+        default = {
+          # default page
+          documentRoot = "${(pkgs.writeTextDir "home/index.html" ''
+            This page is a TODO.
+          '')}/home/";
+        };
+      };
     };
   });
 }
