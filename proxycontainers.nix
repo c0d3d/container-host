@@ -4,13 +4,14 @@ let
   cfg = config.proxycontainers;
   startIp = 11;
   makeIp = num: "192.168.100.${toString num}";
+  makeSlug = num: toString num;
   addIps = (set:
     let
       names = builtins.attrNames set;
       folded = lib.lists.foldr (cur: acc:
         let
           val = builtins.getAttr cur set;
-          newVal = val // { ip = makeIp acc.idx; };
+          newVal = val // { ip = makeIp acc.idx; slug = makeSlug acc.idx; };
           newItems = acc.items // { "${cur}" = newVal; };
           newIdx = acc.idx + 1;
         in { items = newItems; idx = newIdx; }
@@ -43,7 +44,7 @@ in {
   (let
     withIps = addIps cfg.containers;
   in {
-    containers = mapAttrs (name: value: {
+    containers = mapAttrs' (name: value: nameValuePair "c${value.slug}" {
       config = value.config; # TODO inherit config (value);
       autoStart = true;
       privateNetwork = true;

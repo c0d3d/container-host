@@ -1,9 +1,9 @@
 let
   containers = {
-    valgrindm = {
+    "valgrindm.test.kylesferrazza.com" = {
       config = import ./valgrindmanual.nix;
     };
-    nixm = {
+    "nixm.test.kylesferrazza.com" = {
       config = import ./nixmanual.nix;
     };
   };
@@ -11,6 +11,8 @@ let
 in {
   vm = { pkgs, ... }: {
     imports = [ ./proxycontainers.nix ];
+
+    # TODO deploy this to GCE
     deployment.targetEnv = "virtualbox";
     proxycontainers = {
       enable = true;
