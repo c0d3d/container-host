@@ -65,8 +65,15 @@ in {
         sslServerChain = ./fullchain.pem;
         sslServerKey = ./privkey.pem;
       }) withIps) // {
+        home = {
+          hostName = "nix.kylesferrazza.com";
+          documentRoot = ./default;
+          onlySSL = true;
+          sslServerCert = ./cert.pem;
+          sslServerChain = ./fullchain.pem;
+          sslServerKey = ./privkey.pem;
+        };
         default = {
-          # default page
           documentRoot = let
             names = attrNames withIps;
             listItems = map (name: "<li><a href=\"//${name}\">${name}</a></li>\n") names;
