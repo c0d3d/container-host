@@ -62,7 +62,7 @@ in {
         '';
         onlySSL = true;
         sslServerCert = ./cert.pem;
-        #sslServerChain = ./fullchain.pem;
+        sslServerChain = ./fullchain.pem;
         sslServerKey = ./privkey.pem;
       }) withIps) // {
         default = {
@@ -72,7 +72,7 @@ in {
           '')}/home/";
           onlySSL = true;
           sslServerCert = ./cert.pem;
-          #sslServerChain = ./fullchain.pem;
+          sslServerChain = ./fullchain.pem;
           sslServerKey = ./privkey.pem;
         };
       };
