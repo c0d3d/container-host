@@ -5,6 +5,9 @@ let
   startIp = 11;
   makeIp = num: "192.168.100.${toString num}";
   makeSlug = num: toString num;
+  sslServerCert = ../nix-gce/cert.pem;
+  sslServerChain = ../nix-gce/fullchain.pem;
+  sslServerKey = ../nix-gce/privkey.pem;
   addIps = (set:
     let
       names = builtins.attrNames set;
@@ -65,17 +68,13 @@ in {
           ProxyPassReverse "/" "http://${value.ip}:${value.port}/"
         '';
         onlySSL = true;
-        sslServerCert = ./cert.pem;
-        sslServerChain = ./fullchain.pem;
-        sslServerKey = ./privkey.pem;
+        inherit sslServerCert sslServerChain sslServerKey;
       }) withIps) // {
         home = {
           hostName = "nix.kylesferrazza.com";
           documentRoot = ./default;
           onlySSL = true;
-          sslServerCert = ./cert.pem;
-          sslServerChain = ./fullchain.pem;
-          sslServerKey = ./privkey.pem;
+          inherit sslServerCert sslServerChain sslServerKey;
         };
         default = {
           documentRoot = let
@@ -90,9 +89,7 @@ in {
             </ul>
           '')}/home/";
           onlySSL = true;
-          sslServerCert = ./cert.pem;
-          sslServerChain = ./fullchain.pem;
-          sslServerKey = ./privkey.pem;
+          inherit sslServerCert sslServerChain sslServerKey;
         };
       };
     };

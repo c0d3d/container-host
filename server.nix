@@ -1,3 +1,4 @@
+{ ... }:
 {
   imports = [
     <nixpkgs/nixos/modules/virtualisation/google-compute-image.nix>
@@ -11,5 +12,6 @@
     enable = true;
     containers = import ./containers.nix;
   };
+
   networking.firewall.allowedTCPPorts = [ 22 443 ];
 }
